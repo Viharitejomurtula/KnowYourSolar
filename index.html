@@ -5,514 +5,241 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KnowYourSolar - Discover Your Home's Solar Potential</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        @keyframes spin-slow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .animate-spin-slow {
-            animation: spin-slow 30s linear infinite;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; color: #1C2A3A; line-height: 1.6; }
+        .hidden { display: none !important; }
+        .top-banner { background-color: #E8F4FF; padding: 12px 20px; text-align: center; }
+        .top-banner p { color: #1C2A3A; font-size: 15px; }
+        .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 80px 20px; background: linear-gradient(135deg, #F0F8FF 0%, #FFFFFF 100%); }
+        .hero-content { max-width: 900px; text-align: center; }
+        .hero h1 { font-size: clamp(2.5rem, 5vw, 3.75rem); font-weight: 700; margin-bottom: 1.5rem; line-height: 1.2; }
+        .hero p { font-size: clamp(1.125rem, 2vw, 1.5rem); color: #4A5568; line-height: 1.7; margin-bottom: 1.5rem; }
+        .btn { padding: 1.25rem 2.5rem; border-radius: 50px; font-size: 1.25rem; font-weight: 600; color: white; background-color: #4AA3FF; border: none; cursor: pointer; box-shadow: 0 10px 25px rgba(74, 163, 255, 0.3); transition: opacity 0.3s; }
+        .btn:hover { opacity: 0.9; }
+        .small-text { font-size: 0.875rem; color: #718096; margin: 0.75rem 0 1.5rem; }
+        .link-btn { background: none; border: none; color: #4A5568; text-decoration: underline; font-size: 1.125rem; cursor: pointer; }
+        section { padding: 5rem 1.5rem; }
+        .bg-white { background-color: white; }
+        .bg-gray { background-color: #F7FAFC; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .container-small { max-width: 900px; margin: 0 auto; }
+        .section-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; text-align: center; margin-bottom: 2rem; }
+        .section-text { font-size: 1.25rem; line-height: 1.7; text-align: center; color: #4A5568; margin-bottom: 2rem; }
+        .bullet-list { list-style: none; padding: 0; }
+        .bullet-list li { display: flex; gap: 1rem; margin-bottom: 1rem; font-size: 1.125rem; color: #2D3748; line-height: 1.7; }
+        .bullet { font-size: 1.5rem; color: #FFD36E; flex-shrink: 0; }
+        .grid { display: grid; gap: 2rem; }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+        .card { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center; }
+        .card h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; }
+        .card p { font-size: 1.125rem; line-height: 1.7; color: #4A5568; }
+        .card-icon { width: 64px; height: 64px; margin: 0 auto 1.5rem; }
+        .step { display: flex; gap: 1.5rem; margin-bottom: 3rem; }
+        .step-number { flex-shrink: 0; width: 64px; height: 64px; background-color: #FFD36E; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; }
+        .step h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; }
+        .step p, .step ul { font-size: 1.125rem; line-height: 1.7; color: #4A5568; }
+        .step ul { margin: 1rem 0 0 1.5rem; }
+        .option-card { background: white; padding: 1.5rem; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .option-image { width: 100%; height: 160px; border-radius: 12px; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: center; font-size: 4rem; }
+        .option-card h4 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .option-card p { color: #4A5568; }
+        .pricing-card { max-width: 800px; margin: 0 auto; padding: 2.5rem; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 3px solid #FFD36E; background-color: #F7FAFC; }
+        .price { text-align: center; margin-bottom: 2rem; }
+        .price-amount { font-size: 4rem; font-weight: 700; }
+        .price-subtitle { font-size: 1.5rem; font-weight: 600; color: #4AA3FF; margin: 0.5rem 0; }
+        .price-note { margin-top: 1rem; font-size: 1.125rem; color: #4A5568; }
+        .feature-list { margin-bottom: 2rem; }
+        .feature-item { display: flex; gap: 0.75rem; margin-bottom: 0.75rem; }
+        .feature-item span { font-size: 1.125rem; color: #2D3748; }
+        footer { background-color: #F7FAFC; padding: 3rem 1.5rem; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+        .footer-col h4 { font-weight: 700; font-size: 1.125rem; margin-bottom: 0.75rem; }
+        .footer-col p, .footer-col a { font-size: 0.875rem; line-height: 1.7; color: #4A5568; text-decoration: none; }
+        .footer-bottom { text-align: center; padding-top: 2rem; border-top: 1px solid #CBD5E0; }
+        .upload-container { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem; }
+        .back-btn { background: none; border: none; color: #4A5568; cursor: pointer; font-size: 1rem; margin-bottom: 2rem; }
+        .upload-instructions { background: #F7FAFC; padding: 2rem; border-radius: 20px; margin-bottom: 2rem; }
+        .upload-instructions h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; }
+        .instruction-item { display: flex; gap: 0.75rem; margin-bottom: 0.75rem; font-size: 1.125rem; }
+        .instruction-number { font-weight: 700; color: #FFD36E; }
+        .upload-zone { border: 4px dashed #CBD5E0; border-radius: 20px; padding: 3rem 2.5rem; text-align: center; background: #F7FAFC; cursor: pointer; margin-bottom: 2rem; }
+        .upload-zone:hover { border-color: #A0AEC0; }
+        .upload-icon { width: 64px; height: 64px; margin: 0 auto 1rem; }
+        .privacy-note { background: #F7FAFC; padding: 1.5rem; border-radius: 15px; text-align: center; margin-bottom: 2rem; }
+        .privacy-note p { line-height: 1.7; color: #4A5568; }
+        .btn-disabled { background-color: #CBD5E0; color: #718096; cursor: not-allowed; }
+        .btn-full { width: 100%; }
+        .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .image-preview { position: relative; }
+        .image-preview img { width: 100%; height: 192px; object-fit: cover; border-radius: 12px; }
+        .remove-btn { position: absolute; top: 8px; right: 8px; background-color: #EF4444; color: white; border-radius: 50%; width: 32px; height: 32px; border: none; cursor: pointer; font-size: 1.25rem; }
+        @media (max-width: 768px) { .step { flex-direction: column; } section { padding: 3rem 1rem; } }
     </style>
 </head>
 <body>
-    <div id="root"></div>
-
-    <script type="text/babel">
-        const { useState } = React;
-
-        const KnowYourSolar = () => {
-          const [currentPage, setCurrentPage] = useState('home');
-          const [uploadedImages, setUploadedImages] = useState([]);
-
-          const scrollToSection = (id) => {
-            document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-          };
-
-          const handleGetStarted = () => {
-            setCurrentPage('upload');
-            window.scrollTo(0, 0);
-          };
-
-          const handleImageUpload = (e) => {
-            const files = Array.from(e.target.files);
-            const newImages = files.map(file => ({
-              file,
-              preview: URL.createObjectURL(file),
-              name: file.name
-            }));
-            setUploadedImages([...uploadedImages, ...newImages]);
-          };
-
-          const removeImage = (index) => {
-            const newImages = [...uploadedImages];
-            URL.revokeObjectURL(newImages[index].preview);
-            newImages.splice(index, 1);
-            setUploadedImages(newImages);
-          };
-
-          if (currentPage === 'upload') {
-            return (
-              <UploadPage 
-                uploadedImages={uploadedImages}
-                handleImageUpload={handleImageUpload}
-                removeImage={removeImage}
-                setCurrentPage={setCurrentPage}
-              />
-            );
-          }
-
-          return (
-            <div className="bg-white" style={{ fontFamily: 'Inter, sans-serif', color: '#1C2A3A' }}>
-              {/* Top Banner */}
-              <div className="w-full py-3 text-center" style={{ backgroundColor: '#E8F4FF' }}>
-                <p className="text-sm md:text-base" style={{ color: '#1C2A3A', fontSize: '15px' }}>
-                  Most homeowners miss out on solar savings because no one clearly explains their real potential.
-                </p>
-              </div>
-
-              {/* Hero Section */}
-              <section className="relative min-h-screen flex items-center justify-center px-6 py-20 overflow-hidden" style={{ background: 'linear-gradient(135deg, #F0F8FF 0%, #FFFFFF 100%)' }}>
-                <div className="absolute top-[10%] right-[10%] w-[300px] h-[300px] opacity-5 animate-spin-slow">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#FFD36E" strokeWidth="2">
-                    <circle cx="12" cy="12" r="5"/>
-                    <line x1="12" y1="1" x2="12" y2="3"/>
-                    <line x1="12" y1="21" x2="12" y2="23"/>
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                    <line x1="1" y1="12" x2="3" y2="12"/>
-                    <line x1="21" y1="12" x2="23" y2="12"/>
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                  </svg>
-                </div>
-                <div style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-                  <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 3.75rem)', fontWeight: '700', marginBottom: '1.5rem', lineHeight: '1.2', color: '#1C2A3A' }}>
-                    You deserve clear, honest answers about solar — most homeowners never get them.
-                  </h1>
-                  <p style={{ fontSize: 'clamp(1.125rem, 2vw, 1.5rem)', marginBottom: '1.5rem', color: '#4A5568', lineHeight: '1.7' }}>
-                    See how solar could transform your home, your bills, and your future — in just a few minutes.
-                  </p>
-                  <p style={{ fontSize: 'clamp(1rem, 1.5vw, 1.25rem)', marginBottom: '2rem', color: '#4A5568', lineHeight: '1.7', maxWidth: '800px', margin: '0 auto 2rem' }}>
-                    If solar has ever felt confusing or risky, you're not alone — and it's not your fault. We're here to make it simple, honest, and personalized to your home.
-                  </p>
-                  <p style={{ fontSize: 'clamp(1rem, 1.5vw, 1.25rem)', marginBottom: '3rem', color: '#4A5568', lineHeight: '1.7' }}>
-                    No sales teams. No pressure. Just a clear solar report built to help you make the best decision for your home.
-                  </p>
-                  <button 
-                    onClick={handleGetStarted}
-                    style={{ 
-                      padding: '1.25rem 2.5rem', 
-                      borderRadius: '50px', 
-                      fontSize: '1.25rem', 
-                      fontWeight: '600', 
-                      color: 'white',
-                      backgroundColor: '#4AA3FF',
-                      border: 'none',
-                      cursor: 'pointer',
-                      boxShadow: '0 10px 25px rgba(74, 163, 255, 0.3)',
-                      transition: 'all 0.3s ease',
-                      marginBottom: '0.75rem'
-                    }}
-                    onMouseOver={(e) => e.target.style.opacity = '0.9'}
-                    onMouseOut={(e) => e.target.style.opacity = '1'}
-                  >
-                    Check My Home's Solar Potential
-                  </button>
-                  <p style={{ fontSize: '0.875rem', color: '#718096', marginBottom: '1.5rem' }}>
-                    Takes 3 minutes. No commitment. No personal info required.
-                  </p>
-                  <div>
-                    <button 
-                      onClick={() => scrollToSection('how-it-works')}
-                      style={{ 
-                        background: 'none', 
-                        border: 'none', 
-                        color: '#4A5568', 
-                        textDecoration: 'underline', 
-                        fontSize: '1.125rem',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      How does this work?
-                    </button>
-                  </div>
-                </div>
-              </section>
-
-              {/* Why Solar Matters Section */}
-              <section style={{ padding: '5rem 1.5rem', backgroundColor: 'white' }}>
-                <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-                  <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '700', textAlign: 'center', marginBottom: '2rem', color: '#1C2A3A' }}>
-                    Solar isn't complicated — it's just been poorly explained.
-                  </h2>
-                  
-                  <p style={{ fontSize: '1.25rem', lineHeight: '1.7', marginBottom: '2rem', textAlign: 'center', color: '#4A5568' }}>
-                    For years, homeowners have been overwhelmed with confusing offers, pushy sales teams, and mixed messages about solar. The result? Most people walk away — not because solar is a bad idea, but because no one ever gave them clear, honest guidance tailored to their home.
-                  </p>
-
-                  <p style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '1.5rem', color: '#1C2A3A' }}>
-                    Here's the truth most homeowners never hear:
-                  </p>
-
-                  <ul style={{ listStyle: 'none', padding: 0 }}>
-                    {[
-                      { text: 'Solar can save families tens of thousands of dollars over time.', sub: ' Rising utility bills aren't your fault — but they don't have to be your future.' },
-                      { text: 'Solar often increases home value, even if you're not planning to stay long.', sub: ' A smart upgrade today can put more money in your pocket when you eventually sell.' },
-                      { text: 'You don't need a perfect roof to benefit.', sub: ' Ground mounts, sheds, carports, and other structures often outperform rooftop panels — and most people never hear about them.' },
-                      { text: 'Solar becomes simple when someone walks you through it step by step.', sub: ' That's why KnowYourSolar exists — to give you clarity, not complexity.' }
-                    ].map((item, i) => (
-                      <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', marginBottom: '1rem', fontSize: '1.125rem', color: '#2D3748', lineHeight: '1.7' }}>
-                        <span style={{ fontSize: '1.5rem', color: '#FFD36E', flexShrink: 0 }}>•</span>
-                        <span><strong>{item.text}</strong>{item.sub}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </section>
-
-              {/* Benefit Cards */}
-              <section style={{ padding: '5rem 1.5rem', backgroundColor: '#F7FAFC' }}>
-                <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-                    {[
-                      {
-                        icon: <svg style={{ width: '64px', height: '64px' }} viewBox="0 0 24 24" fill="none" stroke="#4AA3FF" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="6" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="18"/><path d="M9 9.5c0-1 1-1.5 3-1.5s3 .5 3 1.5-1 1.5-3 1.5-3 .5-3 1.5 1 1.5 3 1.5 3-.5 3-1.5"/></svg>,
-                        title: 'Save Thousands Over Time',
-                        text: 'What if your future energy bills were dramatically lower? Most homeowners can save $20,000+ over 20 years — and many save much more. We calculate your real savings, based on your real home, in minutes.'
-                      },
-                      {
-                        icon: <svg style={{ width: '64px', height: '64px' }} viewBox="0 0 24 24" fill="none" stroke="#4AA3FF" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/><line x1="12" y1="2" x2="12" y2="8"/><line x1="9" y1="5" x2="15" y2="5"/></svg>,
-                        title: 'Increase Your Home\'s Value',
-                        text: 'A solar-powered home is more attractive to buyers — cleaner, smarter, and cheaper to live in. Homes with solar typically sell for 4–5% more, making it one of the few upgrades that pays you back twice.'
-                      },
-                      {
-                        icon: <svg style={{ width: '64px', height: '64px' }} viewBox="0 0 24 24" fill="none" stroke="#4AA3FF" strokeWidth="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>,
-                        title: 'Good for the Planet',
-                        text: 'Solar isn't just an investment in your home — it's an investment in the future. Lower emissions, cleaner air, and a stronger community, all while saving money.'
-                      }
-                    ].map((card, i) => (
-                      <div key={i} style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', textAlign: 'center' }}>
-                        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>{card.icon}</div>
-                        <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '1rem', color: '#1C2A3A' }}>{card.title}</h3>
-                        <p style={{ fontSize: '1.125rem', lineHeight: '1.7', color: '#4A5568' }}>{card.text}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </section>
-
-              {/* How It Works */}
-              <section id="how-it-works" style={{ padding: '5rem 1.5rem', backgroundColor: 'white' }}>
-                <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-                  <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '700', textAlign: 'center', marginBottom: '4rem', color: '#1C2A3A' }}>
-                    We guide you from confusion to clarity — step by step.
-                  </h2>
-                  {[
-                    { title: 'Upload Photos of Your Home', text: 'We show you exactly how to take them. Your images are used only to analyze your home's solar potential — never shared, never sold.' },
-                    { title: 'Our AI Studies Your Property', text: 'We look at your roof, your yard, sunlight patterns, shading, and structural options. Because solar isn't one-size-fits-all, and your home deserves a personalized approach.' },
-                    { 
-                      title: 'Get Your Personalized Solar Report', 
-                      text: 'A clear, easy-to-read breakdown of:',
-                      list: ['Solar production potential', 'Best panel locations (roof and ground)', 'Annual + lifetime savings', 'Payback timeline', 'Home value increase', 'Environmental impact'],
-                      footer: 'No jargon. No pressure. Just the truth.'
-                    },
-                    { title: 'Connect with Trusted Installers (Optional)', text: 'If you want to take the next step, we'll connect you with local installers who have high ratings and a reputation for honesty. If not, your report is yours to keep. No strings attached.' }
-                  ].map((step, i) => (
-                    <div key={i} style={{ display: 'flex', gap: '1.5rem', marginBottom: '3rem', flexDirection: window.innerWidth < 768 ? 'column' : 'row' }}>
-                      <div style={{ flexShrink: 0, width: '64px', height: '64px', backgroundColor: '#FFD36E', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', fontWeight: '700', color: '#1C2A3A' }}>
-                        {i + 1}
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '0.75rem', color: '#1C2A3A' }}>{step.title}</h3>
-                        <p style={{ fontSize: '1.125rem', lineHeight: '1.7', color: '#4A5568', marginBottom: step.list ? '1rem' : 0 }}>{step.text}</p>
-                        {step.list && (
-                          <ul style={{ fontSize: '1.125rem', lineHeight: '1.7', color: '#4A5568', marginLeft: '1.5rem' }}>
-                            {step.list.map((item, j) => <li key={j}>• {item}</li>)}
-                          </ul>
-                        )}
-                        {step.footer && <p style={{ fontSize: '1.125rem', lineHeight: '1.7', color: '#4A5568', marginTop: '1rem' }}>{step.footer}</p>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              {/* Solar Options */}
-              <section style={{ padding: '5rem 1.5rem', backgroundColor: '#F7FAFC' }}>
-                <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-                  <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '700', textAlign: 'center', marginBottom: '1.5rem', color: '#1C2A3A' }}>
-                    Solar isn't one-size-fits-all. We show you EVERY option.
-                  </h2>
-                  <p style={{ fontSize: '1.25rem', textAlign: 'center', marginBottom: '4rem', maxWidth: '800px', margin: '0 auto 4rem', lineHeight: '1.7', color: '#4A5568' }}>
-                    Most homeowners think solar = "roof panels."<br />
-                    We reveal better options they never knew existed:
-                  </p>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
-                    {[
-                      { emoji: '🏠', title: 'Roof Solar', text: 'Great when roof angle & shading are ideal.', gradient: 'linear-gradient(135deg, #FEF3C7 0%, #FCD34D 100%)' },
-                      { emoji: '🌱', title: 'Ground-Mounted Solar', text: 'Often the most efficient and easiest to maintain.', gradient: 'linear-gradient(135deg, #D1FAE5 0%, #6EE7B7 100%)' },
-                      { emoji: '🚗', title: 'Solar Carport', text: 'Generates power + keeps cars cool.', gradient: 'linear-gradient(135deg, #DBEAFE 0%, #93C5FD 100%)' },
-                      { emoji: '📍', title: 'Pole-Mounted Solar', text: 'Tracking options follow the sun for 25–35% more energy.', gradient: 'linear-gradient(135deg, #FEF3C7 0%, #FBBF24 100%)' },
-                      { emoji: '🏚️', title: 'Shed / Garage Solar', text: 'Perfect for properties with outbuildings.', gradient: 'linear-gradient(135deg, #FEE2E2 0%, #FCA5A5 100%)' },
-                      { emoji: '☀️', title: 'Patio / Pergola Solar', text: 'A beautiful upgrade that also powers your home.', gradient: 'linear-gradient(135deg, #D9F99D 0%, #A3E635 100%)' }
-                    ].map((option, i) => (
-                      <div key={i} style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '15px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-                        <div style={{ width: '100%', height: '160px', background: option.gradient, borderRadius: '12px', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '4rem' }}>
-                          {option.emoji}
-                        </div>
-                        <h4 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '0.5rem', color: '#1C2A3A' }}>{option.title}</h4>
-                        <p style={{ lineHeight: '1.6', color: '#4A5568' }}>{option.text}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </section>
-
-              {/* Pricing */}
-              <section style={{ padding: '5rem 1.5rem', backgroundColor: 'white' }}>
-                <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
-                  <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '700', marginBottom: '4rem', color: '#1C2A3A' }}>
-                    A powerful solar analysis — for the price of lunch.
-                  </h2>
-                  <div style={{ padding: '2.5rem', borderRadius: '30px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', border: '3px solid #FFD36E', backgroundColor: '#F7FAFC' }}>
-                    <div style={{ marginBottom: '2rem' }}>
-                      <div style={{ fontSize: '4rem', fontWeight: '700', color: '#1C2A3A' }}>$20</div>
-                      <div style={{ fontSize: '1.5rem', fontWeight: '600', color: '#4AA3FF' }}>Full Solar Report</div>
-                      <p style={{ marginTop: '1rem', fontSize: '1.125rem', color: '#4A5568' }}>One-time payment. No subscriptions. No upsells.</p>
-                    </div>
-                    <div style={{ textAlign: 'left', marginBottom: '2rem' }}>
-                      {[
-                        'Personalized financial breakdown',
-                        'Shading + efficiency heatmap',
-                        'Roof AND non-roof solar analysis',
-                        'Home value increase estimate',
-                        'Environmental impact',
-                        'Trusted installer matches',
-                        'Full downloadable PDF'
-                      ].map((feature, i) => (
-                        <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                          <span style={{ fontSize: '1.5rem' }}>✔</span>
-                          <span style={{ fontSize: '1.125rem', color: '#2D3748' }}>{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <button 
-                      onClick={handleGetStarted}
-                      style={{ 
-                        width: '100%',
-                        padding: '1.25rem 2.5rem', 
-                        borderRadius: '50px', 
-                        fontSize: '1.25rem', 
-                        fontWeight: '600', 
-                        color: 'white',
-                        backgroundColor: '#4AA3FF',
-                        border: 'none',
-                        cursor: 'pointer',
-                        boxShadow: '0 10px 25px rgba(74, 163, 255, 0.3)',
-                        marginBottom: '0.75rem'
-                      }}
-                    >
-                      Get My Solar Report for $20
-                    </button>
-                    <p style={{ fontSize: '0.875rem', color: '#718096' }}>
-                      Takes 3 minutes. No commitment. No personal info required.
-                    </p>
-                  </div>
-                </div>
-              </section>
-
-              {/* Footer */}
-              <footer style={{ padding: '3rem 1.5rem', backgroundColor: '#F7FAFC' }}>
-                <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem', marginBottom: '2rem' }}>
-                    {[
-                      { title: 'About KnowYourSolar', text: 'Built to help homeowners make confident solar decisions.' },
-                      { title: 'Our Mission', text: 'Clear, honest solar guidance — no sales pressure.' },
-                      { title: 'Data Privacy', text: 'We NEVER sell your photos or data.', link: 'Privacy Policy' },
-                      { title: 'Contact', text: 'hello@knowyoursolar.com' }
-                    ].map((col, i) => (
-                      <div key={i}>
-                        <h4 style={{ fontWeight: '700', fontSize: '1.125rem', marginBottom: '0.75rem', color: '#1C2A3A' }}>{col.title}</h4>
-                        {col.link && <a href="#" style={{ fontSize: '0.875rem', display: 'block', marginBottom: '0.5rem', color: '#4A5568', textDecoration: 'none' }}>{col.link}</a>}
-                        <p style={{ fontSize: '0.875rem', lineHeight: '1.7', color: '#4A5568' }}>{col.text}</p>
-                      </div>
-                    ))}
-                  </div>
-                  <div style={{ textAlign: 'center', paddingTop: '2rem', borderTop: '1px solid #CBD5E0' }}>
-                    <p style={{ fontSize: '0.875rem', color: '#4A5568' }}>
-                      © 2024 KnowYourSolar. We built this to help you — not to sell you.
-                    </p>
-                  </div>
-                </div>
-              </footer>
+    <div id="landingPage">
+        <div class="top-banner"><p>Most homeowners miss out on solar savings because no one clearly explains their real potential.</p></div>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>You deserve clear, honest answers about solar — most homeowners never get them.</h1>
+                <p>See how solar could transform your home, your bills, and your future — in just a few minutes.</p>
+                <p style="max-width: 800px; margin: 0 auto 2rem;">If solar has ever felt confusing or risky, you're not alone — and it's not your fault. We're here to make it simple, honest, and personalized to your home.</p>
+                <p>No sales teams. No pressure. Just a clear solar report built to help you make the best decision for your home.</p>
+                <button class="btn" onclick="showUploadPage()">Check My Home's Solar Potential</button>
+                <p class="small-text">Takes 3 minutes. No commitment. No personal info required.</p>
+                <button class="link-btn" onclick="scrollToSection('how-it-works')">How does this work?</button>
             </div>
-          );
-        };
-
-        // Upload Page Component
-        const UploadPage = ({ uploadedImages, handleImageUpload, removeImage, setCurrentPage }) => {
-          return (
-            <div style={{ minHeight: '100vh', backgroundColor: 'white', padding: '3rem 1.5rem', fontFamily: 'Inter, sans-serif' }}>
-              <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-                <button 
-                  onClick={() => setCurrentPage('home')}
-                  style={{ 
-                    background: 'none', 
-                    border: 'none', 
-                    color: '#4A5568', 
-                    marginBottom: '2rem', 
-                    cursor: 'pointer',
-                    fontSize: '1rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem'
-                  }}
-                >
-                  ← Back to Home
-                </button>
-
-                <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-                  <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: '700', marginBottom: '1.5rem', color: '#1C2A3A' }}>
-                    Let's see what solar can do for your home.
-                  </h1>
-                </div>
-
-                <div style={{ padding: '2rem', borderRadius: '20px', marginBottom: '2rem', backgroundColor: '#F7FAFC' }}>
-                  <h2 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '1.5rem', color: '#1C2A3A' }}>
-                    Take these 3 pictures:
-                  </h2>
-                  <div style={{ fontSize: '1.125rem', color: '#2D3748' }}>
-                    {[
-                      { num: '1.', text: 'Front of home', color: '#FFD36E' },
-                      { num: '2.', text: 'Roof area', color: '#FFD36E' },
-                      { num: '3.', text: 'Backyard/side yard (for ground/pole possibilities)', color: '#FFD36E' },
-                      { num: 'Optional:', text: 'garage/shed/patio', color: '#718096' }
-                    ].map((item, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                        <span style={{ fontWeight: '700', color: item.color }}>{item.num}</span>
-                        <span style={{ color: i === 3 ? '#4A5568' : '#2D3748' }}>{item.text}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div style={{ marginBottom: '2rem' }}>
-                  <label style={{ display: 'block', width: '100%' }}>
-                    <div style={{ 
-                      border: '4px dashed #CBD5E0', 
-                      borderRadius: '20px', 
-                      padding: '3rem 2.5rem', 
-                      textAlign: 'center', 
-                      cursor: 'pointer',
-                      backgroundColor: '#F7FAFC',
-                      transition: 'border-color 0.3s'
-                    }}>
-                      <div style={{ marginBottom: '1rem' }}>
-                        <svg style={{ width: '64px', height: '64px', margin: '0 auto' }} fill="none" stroke="#A0AEC0" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
-                        </svg>
-                      </div>
-                      <p style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '0.5rem', color: '#1C2A3A' }}>
-                        Click to upload or drag and drop
-                      </p>
-                      <p style={{ color: '#4A5568' }}>PNG, JPG up to 10MB each</p>
-                    </div>
-                    <input 
-                      type="file" 
-                      style={{ display: 'none' }} 
-                      accept="image/*" 
-                      multiple
-                      onChange={handleImageUpload}
-                    />
-                  </label>
-                </div>
-
-                {uploadedImages.length > 0 && (
-                  <div style={{ marginBottom: '2rem' }}>
-                    <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '1rem', color: '#1C2A3A' }}>Uploaded Photos:</h3>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
-                      {uploadedImages.map((img, index) => (
-                        <div key={index} style={{ position: 'relative' }}>
-                          <img 
-                            src={img.preview} 
-                            alt={`Upload ${index + 1}`}
-                            style={{ width: '100%', height: '192px', objectFit: 'cover', borderRadius: '12px' }}
-                          />
-                          <button 
-                            onClick={() => removeImage(index)}
-                            style={{ 
-                              position: 'absolute', 
-                              top: '8px', 
-                              right: '8px', 
-                              backgroundColor: '#EF4444', 
-                              color: 'white', 
-                              borderRadius: '50%', 
-                              width: '32px', 
-                              height: '32px', 
-                              border: 'none',
-                              cursor: 'pointer',
-                              fontSize: '1.25rem',
-                              lineHeight: '1'
-                            }}
-                          >
-                            ×
-                          </button>
-                          <p style={{ fontSize: '0.875rem', marginTop: '0.5rem', color: '#4A5568', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{img.name}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                <div style={{ padding: '1.5rem', borderRadius: '15px', marginBottom: '2rem', backgroundColor: '#F7FAFC' }}>
-                  <p style={{ lineHeight: '1.7', textAlign: 'center', color: '#4A5568' }}>
-                    <span style={{ fontWeight: '600', color: '#1C2A3A' }}>Your privacy matters:</span> Your photos are processed only by our analysis model. We NEVER sell, share, or store images beyond generating your report.
-                  </p>
-                </div>
-
-                <button 
-                  disabled={uploadedImages.length === 0}
-                  style={{ 
-                    width: '100%',
-                    padding: '1.25rem', 
-                    borderRadius: '50px', 
-                    fontSize: '1.25rem', 
-                    fontWeight: '600',
-                    border: 'none',
-                    cursor: uploadedImages.length === 0 ? 'not-allowed' : 'pointer',
-                    backgroundColor: uploadedImages.length === 0 ? '#CBD5E0' : '#4AA3FF',
-                    color: uploadedImages.length === 0 ? '#718096' : 'white',
-                    transition: 'all 0.3s'
-                  }}
-                >
-                  Continue to Checkout →
-                </button>
-
-                {uploadedImages.length === 0 && (
-                  <p style={{ textAlign: 'center', marginTop: '1rem', color: '#718096' }}>
-                    Please upload at least one photo to continue
-                  </p>
-                )}
-              </div>
+        </section>
+        <section class="bg-white">
+            <div class="container-small">
+                <h2 class="section-title">Solar isn't complicated — it's just been poorly explained.</h2>
+                <p class="section-text">For years, homeowners have been overwhelmed with confusing offers, pushy sales teams, and mixed messages about solar. The result? Most people walk away — not because solar is a bad idea, but because no one ever gave them clear, honest guidance tailored to their home.</p>
+                <p style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem;">Here's the truth most homeowners never hear:</p>
+                <ul class="bullet-list">
+                    <li><span class="bullet">•</span><span><strong>Solar can save families tens of thousands of dollars over time.</strong> Rising utility bills aren't your fault — but they don't have to be your future.</span></li>
+                    <li><span class="bullet">•</span><span><strong>Solar often increases home value, even if you're not planning to stay long.</strong> A smart upgrade today can put more money in your pocket when you eventually sell.</span></li>
+                    <li><span class="bullet">•</span><span><strong>You don't need a perfect roof to benefit.</strong> Ground mounts, sheds, carports, and other structures often outperform rooftop panels — and most people never hear about them.</span></li>
+                    <li><span class="bullet">•</span><span><strong>Solar becomes simple when someone walks you through it step by step.</strong> That's why KnowYourSolar exists — to give you clarity, not complexity.</span></li>
+                </ul>
             </div>
-          );
-        };
-
-        ReactDOM.render(<KnowYourSolar />, document.getElementById('root'));
+        </section>
+        <section class="bg-gray">
+            <div class="container">
+                <div class="grid grid-3">
+                    <div class="card">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="#4AA3FF" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="6" x2="12" y2="8"/><line x1="12" y1="16" x2="12" y2="18"/><path d="M9 9.5c0-1 1-1.5 3-1.5s3 .5 3 1.5-1 1.5-3 1.5-3 .5-3 1.5 1 1.5 3 1.5 3-.5 3-1.5"/></svg>
+                        <h3>Save Thousands Over Time</h3>
+                        <p>What if your future energy bills were dramatically lower? Most homeowners can save $20,000+ over 20 years — and many save much more. We calculate your real savings, based on your real home, in minutes.</p>
+                    </div>
+                    <div class="card">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="#4AA3FF" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/><line x1="12" y1="2" x2="12" y2="8"/><line x1="9" y1="5" x2="15" y2="5"/></svg>
+                        <h3>Increase Your Home's Value</h3>
+                        <p>A solar-powered home is more attractive to buyers — cleaner, smarter, and cheaper to live in. Homes with solar typically sell for 4–5% more, making it one of the few upgrades that pays you back twice.</p>
+                    </div>
+                    <div class="card">
+                        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="#4AA3FF" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+                        <h3>Good for the Planet</h3>
+                        <p>Solar isn't just an investment in your home — it's an investment in the future. Lower emissions, cleaner air, and a stronger community, all while saving money.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="how-it-works" class="bg-white">
+            <div class="container">
+                <h2 class="section-title">We guide you from confusion to clarity — step by step.</h2>
+                <div class="step"><div class="step-number">1</div><div><h3>Upload Photos of Your Home</h3><p>We show you exactly how to take them. Your images are used only to analyze your home's solar potential — never shared, never sold.</p></div></div>
+                <div class="step"><div class="step-number">2</div><div><h3>Our AI Studies Your Property</h3><p>We look at your roof, your yard, sunlight patterns, shading, and structural options. Because solar isn't one-size-fits-all, and your home deserves a personalized approach.</p></div></div>
+                <div class="step"><div class="step-number">3</div><div><h3>Get Your Personalized Solar Report</h3><p>A clear, easy-to-read breakdown of:</p><ul><li>Solar production potential</li><li>Best panel locations (roof and ground)</li><li>Annual + lifetime savings</li><li>Payback timeline</li><li>Home value increase</li><li>Environmental impact</li></ul><p>No jargon. No pressure. Just the truth.</p></div></div>
+                <div class="step"><div class="step-number">4</div><div><h3>Connect with Trusted Installers (Optional)</h3><p>If you want to take the next step, we'll connect you with local installers who have high ratings and a reputation for honesty. If not, your report is yours to keep. No strings attached.</p></div></div>
+            </div>
+        </section>
+        <section class="bg-gray">
+            <div class="container">
+                <h2 class="section-title">Solar isn't one-size-fits-all. We show you EVERY option.</h2>
+                <p class="section-text">Most homeowners think solar = "roof panels."<br>We reveal better options they never knew existed:</p>
+                <div class="grid grid-3">
+                    <div class="option-card"><div class="option-image" style="background: linear-gradient(135deg, #FEF3C7 0%, #FCD34D 100%);">🏠</div><h4>Roof Solar</h4><p>Great when roof angle & shading are ideal.</p></div>
+                    <div class="option-card"><div class="option-image" style="background: linear-gradient(135deg, #D1FAE5 0%, #6EE7B7 100%);">🌱</div><h4>Ground-Mounted Solar</h4><p>Often the most efficient and easiest to maintain.</p></div>
+                    <div class="option-card"><div class="option-image" style="background: linear-gradient(135deg, #DBEAFE 0%, #93C5FD 100%);">🚗</div><h4>Solar Carport</h4><p>Generates power + keeps cars cool.</p></div>
+                    <div class="option-card"><div class="option-image" style="background: linear-gradient(135deg, #FEF3C7 0%, #FBBF24 100%);">📍</div><h4>Pole-Mounted Solar</h4><p>Tracking options follow the sun for 25–35% more energy.</p></div>
+                    <div class="option-card"><div class="option-image" style="background: linear-gradient(135deg, #FEE2E2 0%, #FCA5A5 100%);">🏚️</div><h4>Shed / Garage Solar</h4><p>Perfect for properties with outbuildings.</p></div>
+                    <div class="option-card"><div class="option-image" style="background: linear-gradient(135deg, #D9F99D 0%, #A3E635 100%);">☀️</div><h4>Patio / Pergola Solar</h4><p>A beautiful upgrade that also powers your home.</p></div>
+                </div>
+            </div>
+        </section>
+        <section class="bg-white">
+            <div class="container">
+                <h2 class="section-title">A powerful solar analysis — for the price of lunch.</h2>
+                <div class="pricing-card">
+                    <div class="price"><div class="price-amount">$20</div><div class="price-subtitle">Full Solar Report</div><p class="price-note">One-time payment. No subscriptions. No upsells.</p></div>
+                    <div class="feature-list">
+                        <div class="feature-item"><span style="font-size: 1.5rem;">✔</span><span>Personalized financial breakdown</span></div>
+                        <div class="feature-item"><span style="font-size: 1.5rem;">✔</span><span>Shading + efficiency heatmap</span></div>
+                        <div class="feature-item"><span style="font-size: 1.5rem;">✔</span><span>Roof AND non-roof solar analysis</span></div>
+                        <div class="feature-item"><span style="font-size: 1.5rem;">✔</span><span>Home value increase estimate</span></div>
+                        <div class="feature-item"><span style="font-size: 1.5rem;">✔</span><span>Environmental impact</span></div>
+                        <div class="feature-item"><span style="font-size: 1.5rem;">✔</span><span>Trusted installer matches</span></div>
+                        <div class="feature-item"><span style="font-size: 1.5rem;">✔</span><span>Full downloadable PDF</span></div>
+                    </div>
+                    <button class="btn btn-full" onclick="showUploadPage()">Get My Solar Report for $20</button>
+                    <p class="small-text" style="text-align: center;">Takes 3 minutes. No commitment. No personal info required.</p>
+                </div>
+            </div>
+        </section>
+        <footer>
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-col"><h4>About KnowYourSolar</h4><p>Built to help homeowners make confident solar decisions.</p></div>
+                    <div class="footer-col"><h4>Our Mission</h4><p>Clear, honest solar guidance — no sales pressure.</p></div>
+                    <div class="footer-col"><h4>Data Privacy</h4><a href="#">Privacy Policy</a><p style="margin-top: 0.5rem;">We NEVER sell your photos or data.</p></div>
+                    <div class="footer-col"><h4>Contact</h4><p>hello@knowyoursolar.com</p></div>
+                </div>
+                <div class="footer-bottom"><p>© 2024 KnowYourSolar. We built this to help you — not to sell you.</p></div>
+            </div>
+        </footer>
+    </div>
+    <div id="uploadPage" class="hidden">
+        <div class="upload-container">
+            <button class="back-btn" onclick="showLandingPage()">← Back to Home</button>
+            <div style="text-align: center; margin-bottom: 3rem;"><h1 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; margin-bottom: 1.5rem;">Let's see what solar can do for your home.</h1></div>
+            <div class="upload-instructions">
+                <h2>Take these 3 pictures:</h2>
+                <div class="instruction-item"><span class="instruction-number">1.</span><span>Front of home</span></div>
+                <div class="instruction-item"><span class="instruction-number">2.</span><span>Roof area</span></div>
+                <div class="instruction-item"><span class="instruction-number">3.</span><span>Backyard/side yard (for ground/pole possibilities)</span></div>
+                <div class="instruction-item"><span style="color: #718096;">Optional:</span><span style="color: #4A5568;">garage/shed/patio</span></div>
+            </div>
+            <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+                <svg class="upload-icon" fill="none" stroke="#A0AEC0" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                <p style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">Click to upload or drag and drop</p>
+                <p style="color: #4A5568;">PNG, JPG up to 10MB each</p>
+                <input type="file" id="fileInput" accept="image/*" multiple style="display: none;" onchange="handleFiles(this.files)">
+            </div>
+            <div id="imagePreview" class="hidden"><h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;">Uploaded Photos:</h3><div id="imageGrid" class="image-grid"></div></div>
+            <div class="privacy-note"><p><strong style="color: #1C2A3A;">Your privacy matters:</strong> Your photos are processed only by our analysis model. We NEVER sell, share, or store images beyond generating your report.</p></div>
+            <button id="continueBtn" class="btn btn-full btn-disabled" disabled>Continue to Checkout →</button>
+            <p id="uploadMessage" style="text-align: center; color: #718096; margin-top: 1rem;">Please upload at least one photo to continue</p>
+        </div>
+    </div>
+    <script>
+        let uploadedFiles = [];
+        function scrollToSection(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
+        function showUploadPage() { document.getElementById('landingPage').classList.add('hidden'); document.getElementById('uploadPage').classList.remove('hidden'); window.scrollTo(0, 0); }
+        function showLandingPage() { document.getElementById('uploadPage').classList.add('hidden'); document.getElementById('landingPage').classList.remove('hidden'); window.scrollTo(0, 0); }
+        function handleFiles(files) {
+            const imagePreview = document.getElementById('imagePreview'), imageGrid = document.getElementById('imageGrid'), continueBtn = document.getElementById('continueBtn'), uploadMessage = document.getElementById('uploadMessage');
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    uploadedFiles.push(file);
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        const div = document.createElement('div');
+                        div.className = 'image-preview';
+                        div.innerHTML = `<img src="${e.target.result}" alt="Upload ${uploadedFiles.length}"><button class="remove-btn" onclick="removeImage(${uploadedFiles.length - 1})">×</button><p style="font-size: 0.875rem; margin-top: 0.5rem; color: #4A5568; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${file.name}</p>`;
+                        imageGrid.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            if (uploadedFiles.length > 0) { imagePreview.classList.remove('hidden'); continueBtn.classList.remove('btn-disabled'); continueBtn.disabled = false; uploadMessage.style.display = 'none'; }
+        }
+        function removeImage(index) {
+            uploadedFiles.splice(index, 1);
+            const imageGrid = document.getElementById('imageGrid');
+            imageGrid.innerHTML = '';
+            uploadedFiles.forEach((file, i) => {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const div = document.createElement('div');
+                    div.className = 'image-preview';
+                    div.innerHTML = `<img src="${e.target.result}" alt="Upload ${i + 1}"><button class="remove-btn" onclick="removeImage(${i})">×</button><p style="font-size: 0.875rem; margin-top: 0.5rem; color: #4A5568; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${file.name}</p>`;
+                    imageGrid.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+            if (uploadedFiles.length === 0) { document.getElementById('imagePreview').classList.add('hidden'); document.getElementById('continueBtn').classList.add('btn-disabled'); document.getElementById('continueBtn').disabled = true; document.getElementById('uploadMessage').style.display = 'block'; }
+        }
     </script>
 </body>
 </html>
